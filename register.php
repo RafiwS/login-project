@@ -1,31 +1,18 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = trim($_POST["username"]);
-    $password = trim($_POST["password"]);
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
     if (!empty($username) && !empty($password)) {
-        $file = "users.txt";
-        if (!file_exists($file)) {
-            touch($file);
-        }
+        $data = $username . "," . $password . "\n"; // Format: username,password
 
-        $users = file($file, FILE_IGNORE_NEW_LINES);
-        foreach ($users as $user) {
-            list($storedUser, $storedPass) = explode(":", $user);
-            if ($storedUser == $username) {
-                echo "Username sudah digunakan!";
-                exit;
-            }
-        }
+        // Simpan ke users.txt
+        $file = "users.txt"; // Nama file
+        file_put_contents($file, $data, FILE_APPEND); // Tambah ke file
 
-
-        $handle = fopen($file, "a");
-        fwrite($handle, "$username:$password\n");
-        fclose($handle);
-
-        echo "Registrasi berhasil! <a href='index.html'>Login</a>";
+        echo "Registrasi berhasil! Silakan login.";
     } else {
-        echo "Harap isi semua data!";
+        echo "Username dan password tidak boleh kosong!";
     }
 }
 ?>
